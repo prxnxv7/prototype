@@ -1,16 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Inder:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Karma:wght@700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lemonada:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap");
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-body {
-  @apply leading-[normal] m-0;
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+html,
+body,
+#root,
+.app,
+.content{
+  height: 100%;
+  width: 100%;
+  font-family: Source Sans 3,sans-serif ;
 }
-*,
-::before,
-::after {
-  border-width: 0;
+
+.app{
+  display: flex;
+  position: relative;
+}
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+
+::-webkit-scrollbar-track{
+  background: #e0e0e0;
+}
+
+::-webkit-scrollbar-thumb{
+  background: #888;
+}
+
+::-webkit-scrollbar-track:hover{
+  background: #555;
 }

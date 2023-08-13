@@ -80,6 +80,12 @@ def person_profile(request, person_id):
     except Person.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['GET'])
+def get_persons(request):
+    persons = Person.objects.all()
+    serializer = PersonSerializer(persons, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 
 
