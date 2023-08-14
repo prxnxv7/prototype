@@ -39,7 +39,7 @@ const Sidebar = () => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
+          background: `${colors.blueAccent[900]} !important`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -71,10 +71,10 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="15px"
+                ml="5px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINS
+                <Typography variant="h3" color={colors.grey[500]}>
+                  WELCOME 
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -90,21 +90,23 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../public/assets/logo192.png`}
+                  src={`../../public/assests/logo192.png`}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
               <Box textAlign="center">
                 <Typography
                   variant="h2"
-                  color={colors.grey[100]}
+                  color={colors.blueAccent[300]}
                   fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
+                  sx={{ m: "10px 0 10px 0" }}
                 >
-                  BIG PROJECT
+                  Annamalaiyaar
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Pranav Admin
+                <Typography variant="h5" color={colors.blueAccent[200]}>
+                  Auto consulting
+                  <br />
+                  Chits & financing
                 </Typography>
               </Box>
             </Box>

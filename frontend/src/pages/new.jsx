@@ -17,20 +17,14 @@ const CreatePersonForm = () => {
     e.preventDefault();
 
     try {
-      // Create a new person with the form data
       const response = await axios.post('http://localhost:8000/api/persons/', formData);
-
-      // Reset the form fields after successful submission
       setFormData({
         name: '',
         phno: '',
         money_owed: '',
         time_period_given: '',
       });
-
-      // Redirect to the notification page after successful submission (you can use useHistory hook here)
     } catch (error) {
-      // Handle error here.
     }
   };
 

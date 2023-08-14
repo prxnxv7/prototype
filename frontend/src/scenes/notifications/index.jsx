@@ -11,7 +11,7 @@ const Transactions = () => {
   const colors = tokens(theme.palette.mode);
   
   const [transactionData, setTransactionData] = useState([]);
-  const [paidAmount, setPaidAmount] = useState(0);  // State to hold fetched data
+  const [paidAmount, setPaidAmount] = useState("");
 
 
   const columns = [
@@ -83,16 +83,15 @@ const Transactions = () => {
 
   const handlePaidButtonClick = async (transactionId) => {
     try {
-      // Call the update_transaction function
-      const response = await axios.patch(`http://localhost:8000/api/update_transaction/${transactionId}`, {
+      const response = await axios.patch(`http://localhost:8000/api/transactions/${transactionId}`, {
         paid: paidAmount
       });
       console.log('Updated transaction:', response.data);
-      
-      // Refresh the transaction data after successful update
+      const updatedTransactions = transactionData.map((transaction) =>
+        transaction.id === response.data.id ? response.data : transaction
+      );
+      setTransactionData(updatedTransactions);
       fetchTransactionData();
-      
-      // Reset the paid amount input field
       setPaidAmount(0);
     } catch (error) {
       console.error("Error updating transaction:", error);
@@ -121,7 +120,7 @@ const Transactions = () => {
       />
       <Box
         m="40px 0 0 0"
-        height="75vh"
+        height="60vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -148,6 +147,7 @@ const Transactions = () => {
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
+            marginBottom: "20px",
           },
         }}
       >

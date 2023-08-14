@@ -6,13 +6,13 @@ import { Route, Routes, useParams } from "react-router-dom";
 import CreatePersonForm from "./pages/new";
 import NotificationPage from "./pages/notifications";
 import PersonProfile from "./pages/profile";
-import DesktopHome from "./pages/home";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Contacts from "./scenes/profile";
 import Form from "./scenes/addcontact";
 import Dashboard from "./scenes/dashboard";
 import TransactionsToday from "./scenes/notifications";
+import "./App.css"
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -32,7 +32,6 @@ function App() {
               <Route path="/create-person" element={<CreatePersonForm />} />
               <Route path="/notification" element={<NotificationPage />} />
               <Route path="/person/:id" element={<PersonProfileWrapper />} />
-              <Route path="/reminder" element={<DesktopHome />} />
               <Route path="/form" element={<Form />} />
               <Route path="/contacts" element={<Contacts />} />
             </Routes>

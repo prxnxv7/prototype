@@ -16,18 +16,18 @@ const Topbar = () => {
     const colorMode = useContext(ColorModeContext);
   
     return (
-      <Box display="flex" justifyContent="space-between" p={2}>
+      <Box display="flex" justifyContent="space-between" p={2} mt={1}>
         {/* SEARCH BAR */}
         <Box
         >
-            <Typography variant="h1" color={colors.grey[100]}>
-                WELCOME BOSS
+            <Typography variant="h1" color={colors.blueAccent[300]}>
+                ANNAMALAIYAAR
             </Typography>
         </Box>
   
         {/* ICONS */}
         <Box display="flex">
-          <IconButton onClick={colorMode.toggleColorMode}>
+          <IconButton onClick={colorMode.toggleColorMode} color={colors.blueAccent[300]}>
             {theme.palette.mode === "dark" ? (
               <DarkModeOutlinedIcon />
             ) : (

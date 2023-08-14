@@ -1,4 +1,3 @@
-# views.py
 
 from django.utils import timezone
 from rest_framework.decorators import api_view
@@ -16,7 +15,7 @@ def create_person(request):
             serializer.save()
             person = serializer.instance
 
-            initial_next_due_date = timezone.now() + timedelta(days=person.time_period_given)
+            initial_next_due_date = timezone.now() + timedelta(minutes=person.time_period_given)
 
             Transaction.objects.create(
                 person=person,
@@ -45,7 +44,6 @@ def update_transaction(request, transaction_id):
         transaction = Transaction.objects.get(id=transaction_id)
         paid_amount = request.data.get('paid', 0)
 
-        # Update final_paid and pending_amount
         transaction.final_paid += paid_amount
         transaction.paid = paid_amount
         transaction.pending_amount = transaction.total_amount_owed - transaction.final_paid
@@ -53,10 +51,9 @@ def update_transaction(request, transaction_id):
         transaction.previous_due_date = timezone.now().date()
 
         transaction.paid_date = timezone.now().date()
-        
-        # Calculate next_due_date dynamically
+
         while transaction.final_paid <= transaction.total_amount_owed:
-            transaction.next_due_date += timedelta(days=transaction.time_period)
+            transaction.next_due_date += timedelta(minutes=transaction.time_period)
 
         transaction.save()
 

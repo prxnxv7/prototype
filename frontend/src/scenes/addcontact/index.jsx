@@ -6,6 +6,26 @@ import Header from "../../components/header";
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const phoneRegExp =
+  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+
+const checkoutSchema = yup.object().shape({
+  name: yup.string().required("required"),
+  phno: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("required"),
+  money_owed: yup.string().required("required"),
+  time_period_given: yup.string().required("required"),
+});
+
+const initialValues = {
+  name: "",
+  phno: "",
+  money_owed: "",
+  time_period_given: "",
+};
+
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
@@ -119,24 +139,6 @@ const Form = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
-const checkoutSchema = yup.object().shape({
-  name: yup.string().required("required"),
-  phno: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  money_owed: yup.string().required("required"),
-  time_period_given: yup.string().required("required"),
-});
-
-const initialValues = {
-  name: "",
-  phno: "",
-  money_owed: "",
-  time_period_given: "",
-};
 
 export default Form;

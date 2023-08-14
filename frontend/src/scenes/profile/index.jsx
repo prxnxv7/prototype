@@ -10,7 +10,7 @@ const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   
-  const [contactData, setContactData] = useState([]);  // State to hold fetched data
+  const [contactData, setContactData] = useState([]);
 
 
   const columns = [
@@ -47,7 +47,6 @@ const Contacts = () => {
   ];
 
   useEffect(() => {
-    // Fetch data from your Django API
     fetch("http://localhost:8000/api/profile/")
       .then(response => response.json())
       .then(data => setContactData(data))
@@ -62,16 +61,14 @@ const Contacts = () => {
       />
       <Box
         m="40px 0 0 0"
-        height="75vh"
+        height="60vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
+            
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
-          },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],
@@ -86,9 +83,11 @@ const Contacts = () => {
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
+            
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
+            marginBottom:"20px",
           },
         }}
       >
