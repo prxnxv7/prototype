@@ -24,7 +24,7 @@ const NotificationPage = () => {
       const response = await axios.patch(
         `http://localhost:8000/api/transactions/${transactionId}/`,
         {
-          paid: parseFloat(paidAmountInput),
+          paid: parseFloat(paidAmount),
           paid_date: new Date().toISOString().slice(0, 10),
         }
       );
@@ -32,6 +32,7 @@ const NotificationPage = () => {
         transaction.id === response.data.id ? response.data : transaction
       );
       setTransactions(updatedTransactions);
+      console.log(updatedTransactions);
     } catch (error) {
     }
   };
@@ -41,19 +42,20 @@ const NotificationPage = () => {
       <h1>Notification Page</h1>
       {transactions.map((transaction) => (
         <div key={transaction.id}>
-          <h2>Name: {transaction.person}</h2>
-          <p>Phone {transaction.person.phno}</p>
+          <h2>Name: {transaction.person_details.name}</h2>
+          <p>Phone {transaction.person_details.phno}</p>
           <p>Time period {transaction.time_period}</p>
           <p>Next due date {transaction.next_due_date}</p>
           <p>Previous due date {transaction.previous_due_date}</p>
-          <button onClick={() => handlePaid(transaction.id)}>Paid</button>
+          <p>Money owed : {transaction.total_amount_owed}</p>
           <input
             type="number"
             placeholder="Enter paid amount"
             value={paidAmountInput}
             onChange={(e) => setPaidAmountInput(e.target.value)}
           />
-          <Link to={`/person/${transaction.person.id}`}>More</Link>
+          <button onClick={() => handlePaid(transaction.id,paidAmountInput)}>Paid</button>
+          <Link to={`/person/${transaction.person}`}>More</Link>
         </div>
       ))}
     </div>

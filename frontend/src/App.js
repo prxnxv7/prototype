@@ -13,10 +13,15 @@ import Form from "./scenes/addcontact";
 import Dashboard from "./scenes/dashboard";
 import TransactionsToday from "./scenes/notifications";
 import "./App.css"
+import { useTheme } from "@mui/material";
+import { tokens } from "./theme";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+  const theme1 = useTheme();
+  const colors = tokens(theme1.palette.mode);
+  const mainBackgroundColor = theme.palette.mode === "dark" ? colors.grey[100] : colors.grey[50];
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -24,7 +29,7 @@ function App() {
         <CssBaseline />
         <div className="app">
           <Sidebar isSidebar={isSidebar} />
-          <main className="content">
+          <main className="content" style={{ backgroundColor: mainBackgroundColor }}>
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
               <Route path="/" element={<Dashboard />} />

@@ -43,7 +43,7 @@ def update_transaction(request, transaction_id):
     try:
         transaction = Transaction.objects.get(id=transaction_id)
         paid_amount = request.data.get('paid', 0)
-
+        print(request.data)
         transaction.final_paid += paid_amount
         transaction.paid = paid_amount
         transaction.pending_amount = transaction.total_amount_owed - transaction.final_paid
@@ -52,12 +52,13 @@ def update_transaction(request, transaction_id):
 
         transaction.paid_date = timezone.now().date()
 
-        while transaction.final_paid <= transaction.total_amount_owed:
+        if transaction.final_paid <= transaction.total_amount_owed:
             transaction.next_due_date += timedelta(minutes=transaction.time_period)
 
         transaction.save()
 
         serializer = TransactionSerializer(transaction)
+        print(serializer.data)
         return Response(serializer.data)
     except Transaction.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)

@@ -6,6 +6,8 @@ export const tokens = (mode) => ({
   ...(mode === "dark"
     ? {
         grey: {
+          0:"ffffff",
+          50: "#f1f1f1",
           100: "#e0e0e0",
           200: "#c2c2c2",
           300: "#a3a3a3",
@@ -17,6 +19,7 @@ export const tokens = (mode) => ({
           900: "#141414",
         },
         primary: {
+          0:"#000000",
           100: "#d0d1d5",
           200: "#a1a4ab",
           300: "#727681",
@@ -26,6 +29,7 @@ export const tokens = (mode) => ({
           700: "#0c101b",
           800: "#080b12",
           900: "#040509",
+          1000:"ffffff",
         },
         greenAccent: {
           100: "#dbf5ee",
@@ -63,6 +67,8 @@ export const tokens = (mode) => ({
       }
     : {
         grey: {
+          0: "ffffff",
+          50: "#f1f1f1",
           100: "#141414",
           200: "#292929",
           300: "#3d3d3d",
@@ -74,6 +80,7 @@ export const tokens = (mode) => ({
           900: "#e0e0e0",
         },
         primary: {
+          0:"#ffffff",
           100: "#040509",
           200: "#080b12",
           300: "#0c101b",
@@ -83,6 +90,7 @@ export const tokens = (mode) => ({
           700: "#727681",
           800: "#a1a4ab",
           900: "#d0d1d5",
+          1000:"#000000,"
         },
         greenAccent: {
           100: "#0f2922",

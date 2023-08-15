@@ -9,20 +9,51 @@ import axios from 'axios';
 const Transactions = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  
-  const [transactionData, setTransactionData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [paidAmount, setPaidAmount] = useState("");
 
 
+  useEffect(() => {
+    fetch("http://localhost:8000/api/transactions/")
+      .then(response => response.json())
+      .then(data => {
+        const flattenedData = data.map(transaction => ({
+          ...transaction,
+          name: transaction.person_details.name,
+          phno: transaction.person_details.phno,
+        }));
+        setTransactions(flattenedData);
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }, []);
+
+  const handlePaid = async (transactionId, paidAmount) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/api/transactions/${transactionId}/`,
+        {
+          paid: parseFloat(paidAmount),
+          paid_date: new Date().toISOString().slice(0, 10),
+        }
+      );
+      const updatedTransactions = transactions.map((transaction) =>
+        transaction.id === response.data.id ? response.data : transaction
+      );
+      setTransactions(updatedTransactions);
+      console.log(updatedTransactions);
+    } catch (error) {
+    }
+  };
+
   const columns = [
     {
-      field: "person.name",
+      field: "name",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "person.phno",
+      field: "phno",
       headerName: "Phone Number",
       flex: 1,
     },
@@ -67,11 +98,12 @@ const Transactions = () => {
             size="small"
             value={paidAmount}
             onChange={(e) => setPaidAmount(Number(e.target.value))}
+            
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handlePaidButtonClick(params.row.id)}
+            onClick={() => handlePaid(params.row.id,paidAmount)}
           >
             Paid
           </Button>
@@ -80,37 +112,6 @@ const Transactions = () => {
     }
   ];
 
-
-  const handlePaidButtonClick = async (transactionId) => {
-    try {
-      const response = await axios.patch(`http://localhost:8000/api/transactions/${transactionId}`, {
-        paid: paidAmount
-      });
-      console.log('Updated transaction:', response.data);
-      const updatedTransactions = transactionData.map((transaction) =>
-        transaction.id === response.data.id ? response.data : transaction
-      );
-      setTransactionData(updatedTransactions);
-      fetchTransactionData();
-      setPaidAmount(0);
-    } catch (error) {
-      console.error("Error updating transaction:", error);
-    }
-  };
-
-  const fetchTransactionData = () => {
-    axios.get('http://localhost:8000/api/notification_page')
-      .then(response => {
-        setTransactionData(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  useEffect(() => {
-    fetchTransactionData();
-  }, []);
 
   return (
     <Box m="20px">
@@ -121,38 +122,45 @@ const Transactions = () => {
       <Box
         m="40px 0 0 0"
         height="60vh"
+        width="76.5rem"
         sx={{
           "& .MuiDataGrid-root": {
-            border: "none",
+            fontSize:"15px",
+            borderColor: colors.grey[900],
+            backgroundColor: colors.primary[0],
+            borderRadius:"20px"
           },
           "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
+            fontSize:"15px",
+            borderLeft:"none",
+            paddingLeft:"20px",
           },
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
+            fontSize:"18px",
+            marginLeft:"10px",
           },
           "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
+            backgroundColor: colors.primary[0],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            borderRadius:"20px",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
+            
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
-            marginBottom: "20px",
+            marginBottom:"20px",
+            marginTop:"20px",
+            marginLeft:"10px",
+            backgroundColor: colors.greenAccent[600],
           },
         }}
       >
         <DataGrid
-          rows={transactionData}
+          rows={transactions}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />

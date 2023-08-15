@@ -62,24 +62,29 @@ const Contacts = () => {
       <Box
         m="40px 0 0 0"
         height="60vh"
+        width="75rem"
         sx={{
           "& .MuiDataGrid-root": {
-            border: "none",
-            
+            fontSize:"15px",
+            borderColor: colors.grey[900],
+            backgroundColor: colors.primary[0],
+            borderRadius:"20px"
           },
           "& .MuiDataGrid-cell": {
-            borderBottom: "none",
+            fontSize:"15px",
+            borderLeft:"none",
+            paddingLeft:"20px",
           },
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
+            fontSize:"18px",
+            marginLeft:"10px",
           },
           "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
+            backgroundColor: colors.primary[0],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
+            borderRadius:"20px",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
@@ -88,6 +93,9 @@ const Contacts = () => {
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
             marginBottom:"20px",
+            marginTop:"20px",
+            marginLeft:"10px",
+            backgroundColor: colors.greenAccent[600],
           },
         }}
       >
