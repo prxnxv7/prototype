@@ -5,6 +5,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/header";
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTheme } from "@mui/material";
+import { tokens } from "../../theme";
 
 const phoneRegExp =
   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
@@ -28,6 +30,8 @@ const initialValues = {
 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
 
   const handleFormSubmit = async (values, { setSubmitting }) => {
@@ -71,6 +75,7 @@ const Form = () => {
               gap="30px"
               gridTemplateColumns="repeat(4, minmax(0, 1fr))"
               sx={{
+                
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >

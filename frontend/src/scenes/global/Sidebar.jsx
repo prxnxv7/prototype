@@ -10,6 +10,7 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import pic from "../../annamalaiyaar.jpeg"
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -86,20 +87,17 @@ const Sidebar = () => {
           {!isCollapsed && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../public/assests/logo192.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
+                  <img 
+                    style={{height:"150px" , width:"150px" , borderRadius:"50%" , border: '3px solid #fff', }}
+                    src={pic} 
+                    alt="" />
               </Box>
               <Box textAlign="center">
                 <Typography
                   variant="h2"
                   color={colors.blueAccent[300]}
                   fontWeight="bold"
-                  sx={{ m: "10px 0 10px 0" }}
+                  sx={{ m: "25px 0 10px 0" }}
                 >
                   Annamalaiyaar
                 </Typography>
@@ -122,7 +120,7 @@ const Sidebar = () => {
             />
 
             <Item
-              title="Contacts Information"
+              title="Contacts"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
@@ -138,21 +136,13 @@ const Sidebar = () => {
             />
 
             <Item
-              title="Profile Form"
+              title="Add Contact"
               to="/form"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
+            
           </Box>
         </Menu>
       </ProSidebar>

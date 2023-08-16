@@ -1,7 +1,7 @@
 # myapp/admin.py
 
 from django.contrib import admin
-from .models import Person, Transaction
+from .models import Person, Transaction, Payment
 
 # Register your models here
 
@@ -16,3 +16,10 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id','person', 'start_date', 'total_amount_owed', 'time_period', 'next_due_date', 'previous_due_date', 'paid', 'final_paid', 'pending_amount')
     search_fields = ('person__name', 'person__phno')
     list_filter = ('time_period', 'next_due_date', 'previous_due_date')
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('id','transaction','paid_amount', 'paid_date')
+    search_fields = ('__person__name', '__person__phno')
+    list_filter = ('paid_amount', 'paid_date')

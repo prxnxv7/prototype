@@ -5,10 +5,10 @@ import Sidebar from "./scenes/global/Sidebar";
 import { Route, Routes, useParams } from "react-router-dom";
 import CreatePersonForm from "./pages/new";
 import NotificationPage from "./pages/notifications";
-import PersonProfile from "./pages/profile";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Contacts from "./scenes/profile";
+import PersonProfile1 from "./scenes/contacts";    /////////////
 import Form from "./scenes/addcontact";
 import Dashboard from "./scenes/dashboard";
 import TransactionsToday from "./scenes/notifications";
@@ -36,7 +36,7 @@ function App() {
               <Route path="/hello" element={<TransactionsToday />} />
               <Route path="/create-person" element={<CreatePersonForm />} />
               <Route path="/notification" element={<NotificationPage />} />
-              <Route path="/person/:id" element={<PersonProfileWrapper />} />
+              <Route path="/persons/:personId" element={<PersonProfile1 />} />
               <Route path="/form" element={<Form />} />
               <Route path="/contacts" element={<Contacts />} />
             </Routes>
@@ -46,9 +46,5 @@ function App() {
     </ColorModeContext.Provider>
   );
 }
-const PersonProfileWrapper = () => {
-  const params = useParams();
-  return <PersonProfile personId={params.id} />;
-};
 
 export default App;

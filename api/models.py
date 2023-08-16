@@ -22,8 +22,17 @@ class Transaction(models.Model):
     paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     next_due_date = models.DateField(null=True, blank=True)
     previous_due_date = models.DateField(null=True, blank=True)
-    pending_amount = models.IntegerField(default=0, null=True)
+    pending_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     paid_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.person.name
+    
+class Payment(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    paid_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.transaction.person.name} - {self.paid_date}"
+    

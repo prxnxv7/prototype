@@ -1,17 +1,16 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
 import { useTheme } from "@mui/material";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  
-  const [contactData, setContactData] = useState([]);
 
+  const [contactData, setContactData] = useState([]);
 
   const columns = [
     {
@@ -44,13 +43,33 @@ const Contacts = () => {
         return startDate.toLocaleDateString();
       },
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Link to={`/persons/${params.row.id}`}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: colors.greenAccent[600],
+                color: colors.grey[100],
+              }}
+            >
+              More
+            </Button>
+          </Link>
+        );
+      },
+    },
   ];
 
   useEffect(() => {
     fetch("http://localhost:8000/api/profile/")
-      .then(response => response.json())
-      .then(data => setContactData(data))
-      .catch(error => console.error("Error fetching data:", error));
+      .then((response) => response.json())
+      .then((data) => setContactData(data))
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   return (
@@ -65,36 +84,35 @@ const Contacts = () => {
         width="75rem"
         sx={{
           "& .MuiDataGrid-root": {
-            fontSize:"15px",
+            fontSize: "15px",
             borderColor: colors.grey[900],
             backgroundColor: colors.primary[0],
-            borderRadius:"20px"
+            borderRadius: "20px",
           },
           "& .MuiDataGrid-cell": {
-            fontSize:"15px",
-            borderLeft:"none",
-            paddingLeft:"20px",
+            fontSize: "15px",
+            borderLeft: "none",
+            paddingLeft: "20.5px",
           },
           "& .MuiDataGrid-columnHeaders": {
-            fontSize:"18px",
-            marginLeft:"10px",
+            fontSize: "18px",
+            marginLeft: "10px",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[0],
           },
           "& .MuiDataGrid-footerContainer": {
             borderTop: "none",
-            borderRadius:"20px",
+            borderRadius: "20px",
           },
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
-            
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
-            marginBottom:"20px",
-            marginTop:"20px",
-            marginLeft:"10px",
+            marginBottom: "20px",
+            marginTop: "20px",
+            marginLeft: "10px",
             backgroundColor: colors.greenAccent[600],
           },
         }}
