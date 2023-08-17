@@ -3,14 +3,38 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
 import { useTheme } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+import axios from "axios";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [contactData, setContactData] = useState([]);
+  let { authTokens, logoutUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    getprofile();
+  }, []);
+
+  let getprofile = async () => {
+    let response = await axios.get("http://127.0.0.1:8000/api/profile/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    });
+    let data = await response.json();
+
+    if (response.status === 200) {
+      setContactData(data);
+    } else if (response.statusText === "Unauthorized") {
+      logoutUser();
+    }
+  };
 
   const columns = [
     {
@@ -64,13 +88,6 @@ const Contacts = () => {
       },
     },
   ];
-
-  useEffect(() => {
-    fetch("http://localhost:8000/api/profile/")
-      .then((response) => response.json())
-      .then((data) => setContactData(data))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
   return (
     <Box m="20px">

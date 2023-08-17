@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import { useTheme } from "@mui/material";
 import "./index.css";
+import AuthContext from "../../context/AuthContext";
 
 const PersonProfile1 = () => {
   const theme = useTheme();
@@ -13,26 +14,34 @@ const PersonProfile1 = () => {
   const [person, setPerson] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [payments, setPayments] = useState([]);
+  let { authTokens, logoutUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchPersonAndTransactions = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/persons/${personId}/`
-        );
-        setPerson(response.data.person);
-        setTransactions(response.data.transactions);
-        setPayments(response.data.payments);
-      } catch (error) {
-        // Handle error here.
-      }
-    };
-    fetchPersonAndTransactions();
+    getPerson();
   }, [personId]);
 
-  if (!person) {
-    return <div>Loading...</div>;
-  }
+  let getPerson = async () => {
+    let response = await axios.get(
+      `http://127.0.0.1:8000/api/persons/${personId}/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      }
+    );
+    const personData = response.data.person;
+    const transactionData = response.data.transactions;
+    const paymentData = response.data.payments;
+
+    if (response.status === 200) {
+      setPerson(personData);
+      setTransactions(transactionData);
+      setPayments(paymentData);
+    } else if (response.statusText === "Unauthorized") {
+      logoutUser();
+    }
+  };
 
   return (
     <Box>
@@ -180,7 +189,7 @@ const PersonProfile1 = () => {
                     p="5px 10px"
                     borderRadius="4px"
                   >
-                    ${payment.paid_amount}
+                    ₹{payment.paid_amount}
                   </Box>
                 </Box>
               ))}

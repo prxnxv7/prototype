@@ -1,18 +1,38 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/header";
 import StatBox from "../../components/statbox";
 import ProgressCircle from "../../components/progresscircles";
+import React, { useEffect, useState, useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [fetchedData, setFetchedData] = useState([]);
+
+  let { authTokens, logoutUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  let getData = async () => {
+    let response = await fetch("http://127.0.0.1:8000/api/dashboard/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    });
+    let data = await response.json();
+
+    if (response.status === 200) {
+      setFetchedData(data);
+    } else if (response.statusText === "Unauthorized") {
+      logoutUser();
+    }
+  };
 
   return (
     <Box m="20px">
@@ -22,18 +42,17 @@ const Dashboard = () => {
       </Box>
 
       {/* GRID & CHARTS */}
-      <Box 
-        backgroundColor={colors.primary[0]}
-        borderRadius="15px">
+      <Box backgroundColor={colors.primary[0]} borderRadius="15px">
         <Box
           display="grid"
-          gridTemplateColumns="repeat(12, 1fr)"
+          gridTemplateColumns="repeat(9, 1fr)"
           gridAutoRows="140px"
           gap="20px"
         >
           {/* ROW 1 */}
           <Box
             gridColumn="span 3"
+            gridRow="span 2"
             backgroundColor={colors.primary[400]}
             display="flex"
             alignItems="center"
@@ -41,85 +60,133 @@ const Dashboard = () => {
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            <StatBox
-              title="12,361"
-              subtitle="Total paid"
-              progress="0.75"
-              increase="+14%"
-              icon={
-                <EmailIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                />
-              }
-            />
+            ///////
           </Box>
           <Box
             gridColumn="span 3"
             backgroundColor={colors.primary[400]}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+            display="block"
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            <StatBox
-              title="431,225"
-              subtitle="Total Pending"
-              progress="0.50"
-              increase="+21%"
-              icon={
-                <PointOfSaleIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                />
-              }
-            />
+            <Typography color={colors.grey[100]} variant="h3" fontWeight="600">
+              Todays Collections
+            </Typography>
+            <Typography
+              color={colors.greenAccent[400]}
+              variant="h3"
+              fontWeight="600"
+              sx={{ marginTop: "20px" }}
+            >
+              12
+            </Typography>
           </Box>
           <Box
             gridColumn="span 3"
             backgroundColor={colors.primary[400]}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+            display="block"
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            <StatBox
-              title="32,441"
-              subtitle="People Pending"
-              progress="0.30"
-              icon={
-                <PersonAddIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                />
-              }
-            />
-          </Box>
-          <Box
-            gridColumn="span 3"
-            backgroundColor={colors.primary[400]}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius="10px"
-            margin="15px 15px 0px 15px"
-          >
-            <StatBox
-              title="1,325,134"
-              subtitle="Traffic Received"
-              progress="0.80"
-              increase="+43%"
-              icon={
-                <TrafficIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-                />
-              }
-            />
+            <Typography color={colors.grey[100]} variant="h3" fontWeight="600">
+              Pending Collections
+            </Typography>
+            <Typography
+              color={colors.greenAccent[400]}
+              variant="h3"
+              fontWeight="600"
+              sx={{ marginTop: "20px" }}
+            >
+              5
+            </Typography>
           </Box>
 
           {/* ROW 2 */}
           <Box
-            gridColumn="span 8"
+            gridColumn="span 3"
             gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+            overflow="auto"
+            borderRadius="10px"
+            margin="15px 15px 15px 15px"
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[400]}`}
+              colors={colors.grey[100]}
+              p="15px"
+            >
+              <Typography
+                color={colors.grey[100]}
+                variant="h3"
+                fontWeight="600"
+              >
+                Paid Today
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.grey[900]}`}
+              p="15px"
+            >
+              <Box color={colors.grey[100]}>5714</Box>
+              <Box
+                backgroundColor={colors.greenAccent[500]}
+                p="5px 10px"
+                borderRadius="4px"
+              >
+                $60000
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            gridColumn="span 3"
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+            overflow="auto"
+            borderRadius="10px"
+            margin="15px 15px 15px 15px"
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[400]}`}
+              colors={colors.grey[100]}
+              p="15px"
+            >
+              <Typography
+                color={colors.grey[100]}
+                variant="h3"
+                fontWeight="600"
+              >
+                Pending
+              </Typography>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.grey[900]}`}
+              p="15px"
+            >
+              <Box color={colors.grey[100]}>5714</Box>
+              <Box
+                backgroundColor={colors.greenAccent[500]}
+                p="5px 10px"
+                borderRadius="4px"
+              >
+                $60000
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            gridColumn="span 3"
+            gridRow="span 1"
             backgroundColor={colors.primary[400]}
             borderRadius="10px"
             margin="15px 0px 15px 15px"
@@ -137,7 +204,7 @@ const Dashboard = () => {
                   fontWeight="600"
                   color={colors.grey[100]}
                 >
-                  Revenue Generated
+                  Total Amount Collected today
                 </Typography>
                 <Typography
                   variant="h3"
@@ -147,70 +214,7 @@ const Dashboard = () => {
                   $59,342.32
                 </Typography>
               </Box>
-              <Box>
-                <IconButton>
-                  <DownloadOutlinedIcon
-                    sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                  />
-                </IconButton>
-              </Box>
             </Box>
-          </Box>
-          <Box
-            gridColumn="span 4"
-            gridRow="span 2"
-            backgroundColor={colors.primary[400]}
-            overflow="auto"
-            borderRadius="10px"
-            margin="15px 15px 15px 15px"
-          >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              colors={colors.grey[100]}
-              p="15px"
-            >
-              <Typography
-                color={colors.grey[100]}
-                variant="h5"
-                fontWeight="600"
-              >
-                Recent Transactions
-              </Typography>
-            </Box>
-            {mockTransactions.map((transaction, i) => (
-              <Box
-                key={`${transaction.txId}-${i}`}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                p="15px"
-              >
-                <Box>
-                  <Typography
-                    color={colors.greenAccent[500]}
-                    variant="h5"
-                    fontWeight="600"
-                  >
-                    {transaction.txId}
-                  </Typography>
-                  <Typography color={colors.grey[100]}>
-                    {transaction.user}
-                  </Typography>
-                </Box>
-                <Box color={colors.grey[100]}>{transaction.date}</Box>
-                <Box
-                  backgroundColor={colors.greenAccent[500]}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  ${transaction.cost}
-                </Box>
-              </Box>
-            ))}
           </Box>
         </Box>
       </Box>

@@ -3,10 +3,11 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/header";
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
+import AuthContext from "../../context/AuthContext";
 
 const phoneRegExp =
   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
@@ -32,7 +33,7 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  let { authTokens, logoutUser } = useContext(AuthContext);
 
   const handleFormSubmit = async (values, { setSubmitting }) => {
     const formData = {
@@ -43,8 +44,14 @@ const Form = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/api/persons/', formData);
-      console.log('Response from server:', response.data);
+      const response = await axios.post(`http://localhost:8000/api/persons/`, formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        }
+      );
       setSubmitting(false);
     } catch (error) {
       console.error('Error submitting form:', error);

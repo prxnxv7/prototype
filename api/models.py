@@ -2,18 +2,21 @@
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Person(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     phno = models.CharField(max_length=15)
     money_owed = models.DecimalField(max_digits=10, decimal_places=2)
     time_period_given = models.PositiveIntegerField(default=30)
     start_date = models.DateTimeField(default=timezone.now)
-
+    
     def __str__(self):
         return self.name
 
 class Transaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     start_date = models.DateField()
     total_amount_owed = models.DecimalField(max_digits=10, decimal_places=2)
@@ -29,6 +32,7 @@ class Transaction(models.Model):
         return self.person.name
     
 class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
     paid_date = models.DateField()

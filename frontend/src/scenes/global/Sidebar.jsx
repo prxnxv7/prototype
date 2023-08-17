@@ -8,9 +8,8 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import pic from "../../annamalaiyaar.jpeg"
+import pic from "../../annamalaiyaar.jpeg";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -75,7 +74,7 @@ const Sidebar = () => {
                 ml="5px"
               >
                 <Typography variant="h3" color={colors.grey[500]}>
-                  WELCOME 
+                  WELCOME
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -87,10 +86,16 @@ const Sidebar = () => {
           {!isCollapsed && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
-                  <img 
-                    style={{height:"150px" , width:"150px" , borderRadius:"50%" , border: '3px solid #fff', }}
-                    src={pic} 
-                    alt="" />
+                <img
+                  style={{
+                    height: "150px",
+                    width: "150px",
+                    borderRadius: "50%",
+                    border: "3px solid #fff",
+                  }}
+                  src={pic}
+                  alt=""
+                />
               </Box>
               <Box textAlign="center">
                 <Typography
@@ -142,7 +147,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            
           </Box>
         </Menu>
       </ProSidebar>

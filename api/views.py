@@ -1,14 +1,47 @@
-
+#views.py
 from django.utils import timezone
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
 from rest_framework.response import Response
 from .models import Payment, Person, Transaction
 from .serializers import PersonSerializer, TransactionSerializer , PaymentSerializer
 from rest_framework import status
 from datetime import timedelta
 from django.db.models import Q, F
+from django.http import JsonResponse
+from django.db.models import Count
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        # ...
+
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(['GET'])
+def getRoutes(request):
+    routes = [
+        '/api/token',
+        '/api/token/refresh',
+    ]
+
+    return Response(routes)
+
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_person(request):
     if request.method == 'POST':
         serializer = PersonSerializer(data=request.data)
@@ -32,7 +65,10 @@ def create_person(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def notification_page(request):
     today = timezone.now().date()
     transactions = Transaction.objects.filter(
@@ -41,7 +77,10 @@ def notification_page(request):
     serializer = TransactionSerializer(transactions, many=True)
     return Response(serializer.data)
 
+
+
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def update_transaction(request, transaction_id):
     try:
         transaction = Transaction.objects.get(id=transaction_id)
@@ -71,7 +110,9 @@ def update_transaction(request, transaction_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def person_profile(request, person_id):
     try:
         person = Person.objects.get(id=person_id)
@@ -91,11 +132,32 @@ def person_profile(request, person_id):
         })
     except Person.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
+
+   
 @api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
 def get_persons(request):
     persons = Person.objects.all()
     serializer = PersonSerializer(persons, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_dashboard(request):
+    today = timezone.now().date()
+    payments = Payment.objects.filter(paid_date=today)
+    
+    payment_data = []
+    for payment in payments:
+        payment_data.append({
+            'person_name': payment.transaction.person.name,
+            'paid_amount': payment.paid_amount,
+        })
+    return Response(payment_data , status=status.HTTP_200_OK)
+
+
+
+        
