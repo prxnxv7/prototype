@@ -11,7 +11,7 @@ const PersonProfile1 = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { personId } = useParams();
-  const [person, setPerson] = useState(null);
+  const [person, setPerson] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [payments, setPayments] = useState([]);
   let { authTokens, logoutUser } = useContext(AuthContext);

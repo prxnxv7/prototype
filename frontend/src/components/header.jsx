@@ -22,15 +22,6 @@ const Header = ({ title, subtitle }) => {
       <Typography variant="h5" color={colors.greenAccent[400]}>
         {subtitle}
       </Typography>
-      <Link to="/">Home</Link>
-      <span> | </span>
-      {user ? (
-        <p onClick={logoutUser}>Logout</p>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
-
-      {user && <p>Hello {user.username}</p>}
     </Box>
   );
 };

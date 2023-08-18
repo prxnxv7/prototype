@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('profile/', views.get_persons, name='get_person'),
+    path('profile/', views.get_persons),
     path('dashboard/', views.get_dashboard, name='dashboard'),
     path('persons/', views.create_person, name='create_person'),
     path('transactions/', views.notification_page, name='notification_page'),

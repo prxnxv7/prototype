@@ -16,6 +16,7 @@ import Login from "./scenes/login";
 import "./App.css";
 import PrivateRoute from "./utils/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
+import Header from "./components/header";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -29,38 +30,48 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          <Sidebar isSidebar={isSidebar} />
-          <main
-            className="content"
-            style={{ backgroundColor: mainBackgroundColor }}
-          >
-            <Topbar setIsSidebar={setIsSidebar} />
-            <Router>
-              <AuthProvider>
-                <Routes>
-                  <PrivateRoute element={Dashboard} path="/dashboard" />
-                  <Route element={Login} path="/login" />
-                  <PrivateRoute element={TransactionsToday} path="/hello" />
-                  <PrivateRoute
-                    element={CreatePersonForm}
-                    path="/create_person"
-                  />
-                  <PrivateRoute
-                    element={NotificationPage}
-                    path="/notification"
-                  />
-                  <PrivateRoute
-                    element={PersonProfile1}
-                    path="//persons/:personId"
-                  />
-                  <PrivateRoute element={Form} path="/form" />
-                  <PrivateRoute element={Contacts} path="/contacts" />
-                </Routes>
-              </AuthProvider>
-            </Router>
-          </main>
-        </div>
+        <AuthProvider>
+          <div className="app">
+            <Sidebar isSidebar={isSidebar} />
+            <main
+              className="content"
+              style={{ backgroundColor: mainBackgroundColor }}
+            >
+              <Topbar setIsSidebar={setIsSidebar} />
+              <Header />
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                <Route
+                  path="/hello"
+                  element={<TransactionsToday />}
+                />
+                <Route
+                  path="/create_person"
+                  element={<CreatePersonForm />}
+                />
+                <Route
+                  path="/notification"
+                  element={<NotificationPage />}
+                />
+                <Route
+                  path="/persons/:personId"
+                  element={<PersonProfile1 />}
+                />
+                <Route
+                  path="/form"
+                  element={<Form />}
+                />
+                <Route
+                  path="/contacts"
+                  element={<Contacts />}
+                />
+
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </main>
+          </div>
+        </AuthProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

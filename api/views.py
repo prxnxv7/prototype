@@ -46,12 +46,13 @@ def create_person(request):
     if request.method == 'POST':
         serializer = PersonSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             person = serializer.instance
 
             initial_next_due_date = timezone.now() + timedelta(minutes=person.time_period_given)
 
             Transaction.objects.create(
+                user=request.user,
                 person=person,
                 start_date=person.start_date,
                 total_amount_owed=person.money_owed,
@@ -72,7 +73,7 @@ def create_person(request):
 def notification_page(request):
     today = timezone.now().date()
     transactions = Transaction.objects.filter(
-        Q(next_due_date=today) & ~Q(final_paid=F('total_amount_owed')) & Q(final_paid__lt=F('total_amount_owed'))
+        Q(next_due_date=today) & ~Q(final_paid=F('total_amount_owed')) & Q(final_paid__lt=F('total_amount_owed')) & Q(user=request.user)
     )
     serializer = TransactionSerializer(transactions, many=True)
     return Response(serializer.data)
@@ -83,7 +84,7 @@ def notification_page(request):
 @permission_classes([IsAuthenticated])
 def update_transaction(request, transaction_id):
     try:
-        transaction = Transaction.objects.get(id=transaction_id)
+        transaction = Transaction.objects.get(id=transaction_id, user=request.user)
         paid_amount = request.data.get('paid', 0)
         print(request.data)
         payment = Payment.objects.create(
@@ -115,7 +116,7 @@ def update_transaction(request, transaction_id):
 @permission_classes([IsAuthenticated])
 def person_profile(request, person_id):
     try:
-        person = Person.objects.get(id=person_id)
+        person = Person.objects.get(id=person_id, user=request.user)
         person_serializer = PersonSerializer(person)
         transactions = Transaction.objects.filter(person=person)
         transaction_serializer = TransactionSerializer(transactions, many=True)
@@ -138,7 +139,7 @@ def person_profile(request, person_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_persons(request):
-    persons = Person.objects.all()
+    persons = Person.objects.filter(user=request.user)
     serializer = PersonSerializer(persons, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -148,7 +149,7 @@ def get_persons(request):
 @permission_classes([IsAuthenticated])
 def get_dashboard(request):
     today = timezone.now().date()
-    payments = Payment.objects.filter(paid_date=today)
+    payments = Payment.objects.filter(paid_date=today, transaction__user=request.user)
     
     payment_data = []
     for payment in payments:
