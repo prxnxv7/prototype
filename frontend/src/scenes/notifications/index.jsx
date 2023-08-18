@@ -6,12 +6,13 @@ import { useTheme } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AuthContext from '../../context/AuthContext'
+import { Link } from "react-router-dom";
 
 const Transactions = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [transactions, setTransactions] = useState([]);
-  const [paidAmount, setPaidAmount] = useState("");
+  const [paidAmounts, setPaidAmounts] = useState({});
   let {authTokens, logoutUser} = useContext(AuthContext)
 
   useEffect(() => {
@@ -46,13 +47,23 @@ const Transactions = () => {
         `http://localhost:8000/api/transactions/${transactionId}/`,
         {
           paid: parseFloat(paidAmount),
-          paid_date: new Date().toISOString().slice(0, 10),
-        }
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        },
       );
       const updatedTransactions = transactions.map((transaction) =>
         transaction.id === response.data.id ? response.data : transaction
       );
       setTransactions(updatedTransactions);
+      setPaidAmounts((prevPaidAmounts) => ({
+        ...prevPaidAmounts,
+        [transactionId]: "",
+      }));
+      window.location.reload();
       console.log(updatedTransactions);
     } catch (error) {}
   };
@@ -108,16 +119,26 @@ const Transactions = () => {
             type="number"
             variant="outlined"
             size="small"
-            value={paidAmount}
-            onChange={(e) => setPaidAmount(Number(e.target.value))}
+            value={paidAmounts[params.row.id] || ""}
+            onChange={(e) =>
+              setPaidAmounts((prevPaidAmounts) => ({
+                ...prevPaidAmounts,
+                [params.row.id]: e.target.value,
+              }))
+            }
+            sx={{marginRight:"5px"}}
           />
+          <Link to={`/notifications/`}>
           <Button
             variant="contained"
-            color="primary"
-            onClick={() => handlePaid(params.row.id, paidAmount)}
+            sx={{
+              backgroundColor:colors.greenAccent[500],
+            }}
+            onClick={() => handlePaid(params.row.id, paidAmounts[params.row.id] || "")}
           >
             Paid
           </Button>
+          </Link>
         </Box>
       ),
     },
@@ -129,7 +150,7 @@ const Transactions = () => {
       <Box
         m="40px 0 0 0"
         height="60vh"
-        width="76.5rem"
+        width="79vw"
         sx={{
           "& .MuiDataGrid-root": {
             fontSize: "15px",

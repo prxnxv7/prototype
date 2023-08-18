@@ -1,15 +1,18 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
-import StatBox from "../../components/statbox";
-import ProgressCircle from "../../components/progresscircles";
+import ProgressCircle2 from "../../components/progresscircles2";
 import React, { useEffect, useState, useContext } from "react";
 import AuthContext from "../../context/AuthContext";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [fetchedData, setFetchedData] = useState([]);
+  const [paymentnum, setPaymentnum] = useState([]);
+  const [transactionnum, setTransactionnum] = useState([]);
+  const [total, setTotal] = useState([]);
+  const [today, setToday] = useState([]);
+  const [pending, setPending] = useState([]);
 
   let { authTokens, logoutUser } = useContext(AuthContext);
 
@@ -28,7 +31,13 @@ const Dashboard = () => {
     let data = await response.json();
 
     if (response.status === 200) {
-      setFetchedData(data);
+      setPaymentnum(data.payments_made_today);
+      setTransactionnum(data.transactions_due_today);
+      setTotal(data.total_payment_amount_today);
+      setToday(data.payments_today);
+      setPending(data.transaction_data);
+
+      console.log(paymentnum);
     } else if (response.statusText === "Unauthorized") {
       logoutUser();
     }
@@ -37,12 +46,12 @@ const Dashboard = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center" >
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
       </Box>
 
       {/* GRID & CHARTS */}
-      <Box backgroundColor={colors.primary[0]} borderRadius="15px">
+      <Box backgroundColor={colors.primary[0]} borderRadius="15px" height="65vh">
         <Box
           display="grid"
           gridTemplateColumns="repeat(9, 1fr)"
@@ -60,7 +69,8 @@ const Dashboard = () => {
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            ///////
+            <ProgressCircle2 progress={(paymentnum)/(transactionnum)} text={transactionnum} />
+            
           </Box>
           <Box
             gridColumn="span 3"
@@ -69,16 +79,24 @@ const Dashboard = () => {
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            <Typography color={colors.grey[100]} variant="h3" fontWeight="600">
+            <Typography 
+              color={colors.grey[100]} 
+              variant="h3" 
+              fontWeight="600"
+              marginLeft="30px"
+              marginTop="22px"
+            >
               Todays Collections
             </Typography>
             <Typography
               color={colors.greenAccent[400]}
-              variant="h3"
+              variant="h2"
               fontWeight="600"
-              sx={{ marginTop: "20px" }}
+              sx={{
+                marginLeft:"30px",
+                marginTop:"15px" }}
             >
-              12
+              {paymentnum}
             </Typography>
           </Box>
           <Box
@@ -86,18 +104,26 @@ const Dashboard = () => {
             backgroundColor={colors.primary[400]}
             display="block"
             borderRadius="10px"
-            margin="15px 0px 0px 15px"
+            margin="15px 15px 0px 15px"
           >
-            <Typography color={colors.grey[100]} variant="h3" fontWeight="600">
+            <Typography 
+              marginLeft="30px"
+              marginTop="22px"
+              color={colors.grey[100]} 
+              variant="h3" fontWeight="600"
+            >
               Pending Collections
             </Typography>
             <Typography
-              color={colors.greenAccent[400]}
-              variant="h3"
+              color={colors.redAccent[500]}
+              variant="h2"
               fontWeight="600"
-              sx={{ marginTop: "20px" }}
+              sx={{
+                marginLeft:"30px",
+                marginTop:"15px" 
+              }}
             >
-              5
+              {transactionnum - paymentnum}
             </Typography>
           </Box>
 
@@ -114,7 +140,7 @@ const Dashboard = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              borderBottom={`4px solid ${colors.primary[400]}`}
+              borderBottom={`4px solid ${colors.grey[700]}`}
               colors={colors.grey[100]}
               p="15px"
             >
@@ -122,26 +148,42 @@ const Dashboard = () => {
                 color={colors.grey[100]}
                 variant="h3"
                 fontWeight="600"
+                
               >
                 Paid Today
               </Typography>
             </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.grey[900]}`}
-              p="15px"
-            >
-              <Box color={colors.grey[100]}>5714</Box>
+            {today.map((now) => (
               <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
+                key={now.transaction_details.person_details.id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.grey[900]}`}
+                p="15px"
               >
-                $60000
+                <Box color={colors.grey[100]}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="400"
+                  >
+                    {now.transaction_details.person_details.name}
+                  </Typography>
+                </Box>
+                <Box
+                  backgroundColor={colors.greenAccent[500]}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  <Typography
+                    variant="h5"
+                    fontWeight="400"
+                  >
+                    ₹{now.paid_amount}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            ))}
           </Box>
           <Box
             gridColumn="span 3"
@@ -155,7 +197,7 @@ const Dashboard = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              borderBottom={`4px solid ${colors.primary[400]}`}
+              borderBottom={`4px solid ${colors.grey[700]}`}
               colors={colors.grey[100]}
               p="15px"
             >
@@ -167,22 +209,37 @@ const Dashboard = () => {
                 Pending
               </Typography>
             </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.grey[900]}`}
-              p="15px"
-            >
-              <Box color={colors.grey[100]}>5714</Box>
+            {pending.map((left) => (
               <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
+                key={left.person_details.id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.grey[900]}`}
+                p="15px"
               >
-                $60000
+                <Box color={colors.grey[100]}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="400"
+                  >
+                    {left.person_details.name}
+                  </Typography>
+                </Box>
+                <Box
+                  backgroundColor={colors.greenAccent[500]}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  <Typography
+                    variant="h5"
+                    fontWeight="400"
+                  >
+                    ₹{left.pending_amount}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            ))}
           </Box>
           <Box
             gridColumn="span 3"
@@ -192,7 +249,7 @@ const Dashboard = () => {
             margin="15px 0px 15px 15px"
           >
             <Box
-              mt="25px"
+              mt="20px"
               p="0 30px"
               display="flex "
               justifyContent="space-between"
@@ -200,18 +257,19 @@ const Dashboard = () => {
             >
               <Box>
                 <Typography
-                  variant="h5"
+                  variant="h4"
                   fontWeight="600"
                   color={colors.grey[100]}
                 >
-                  Total Amount Collected today
+                  Total Collection Today
                 </Typography>
                 <Typography
-                  variant="h3"
+                  mt="5px"
+                  variant="h2"
                   fontWeight="bold"
-                  color={colors.greenAccent[500]}
+                  color={colors.blueAccent[400]}
                 >
-                  $59,342.32
+                  ₹{total}
                 </Typography>
               </Box>
             </Box>

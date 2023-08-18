@@ -6,9 +6,9 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import pic from "../../annamalaiyaar.jpeg";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -134,16 +134,16 @@ const Sidebar = () => {
 
             <Item
               title="Notifications"
-              to="/hello"
-              icon={<ReceiptOutlinedIcon />}
+              to="/notifications"
+              icon={<NotificationsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
             <Item
               title="Add Contact"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
+              to="/add_contact"
+              icon={<PersonAddAltIcon />}
               selected={selected}
               setSelected={setSelected}
             />

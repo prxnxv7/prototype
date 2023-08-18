@@ -6,8 +6,9 @@ import { tokens } from "../../theme";
 import { useTheme } from "@mui/material";
 import "./index.css";
 import AuthContext from "../../context/AuthContext";
+import ProgressCircle from "../../components/progresscircles";
 
-const PersonProfile1 = () => {
+const PersonProfile = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { personId } = useParams();
@@ -38,6 +39,7 @@ const PersonProfile1 = () => {
       setPerson(personData);
       setTransactions(transactionData);
       setPayments(paymentData);
+      console.log(person);
     } else if (response.statusText === "Unauthorized") {
       logoutUser();
     }
@@ -90,7 +92,7 @@ const PersonProfile1 = () => {
               paddingLeft="20px"
             >
               <h2>Amount Per Due</h2>
-              <h2 className="css">{person.time_period_given} Day</h2>
+              <h2 className="css">{person.time_period_given} Days</h2>
             </Box>
             <Box
               gridColumn="span 3"
@@ -100,10 +102,11 @@ const PersonProfile1 = () => {
               paddingLeft="20px"
             >
               <h2>Next Due</h2>
-              <h2 className="css">{transactions.next_due_date}</h2>
+              <h2 className="css">{transactions.length > 0 ? new Date(transactions[0].next_due_date).toLocaleDateString() : ''}</h2>
             </Box>
 
             {/* ROW 2 */}
+            {transactions.map((transaction) => (
             <Box
               gridColumn="span 3"
               gridRow="span 2"
@@ -114,19 +117,23 @@ const PersonProfile1 = () => {
               <Box
                 mt="25px"
                 p="0 30px"
-                display="flex "
+                display="block "
                 justifyContent="space-between"
                 alignItems="center"
               >
                 <Typography
-                  variant="h5"
+                  variant="h3"
                   fontWeight="600"
                   color={colors.grey[100]}
+                  mb="15px"
                 >
-                  Total Completed
+                  Completion
                 </Typography>
+                <ProgressCircle progress={(transaction.final_paid)/(transaction.total_amount_owed)} text="null" />
               </Box>
             </Box>
+            ))}
+            {transactions.map((transaction) => (
             <Box
               gridColumn="span 3"
               gridRow="span 2"
@@ -137,19 +144,22 @@ const PersonProfile1 = () => {
               <Box
                 mt="25px"
                 p="0 30px"
-                display="flex "
+                display="block "
                 justifyContent="space-between"
                 alignItems="center"
               >
                 <Typography
-                  variant="h5"
+                  variant="h3"
                   fontWeight="600"
                   color={colors.grey[100]}
+                  mb="15px"
                 >
-                  Total Pending
+                  Collections
                 </Typography>
+                <ProgressCircle progress={(transaction.final_paid)/(transaction.total_amount_owed)} text={transaction.total_amount_owed} />
               </Box>
             </Box>
+            ))}
 
             <Box
               gridColumn="span 3"
@@ -183,7 +193,7 @@ const PersonProfile1 = () => {
                   borderBottom={`4px solid ${colors.grey[900]}`}
                   p="15px"
                 >
-                  <Box color={colors.grey[100]}>{payment.paid_date}</Box>
+                  <Box color={colors.grey[100]}>{new Date(payment.paid_date).toLocaleDateString()}</Box>
                   <Box
                     backgroundColor={colors.greenAccent[500]}
                     p="5px 10px"
@@ -270,4 +280,4 @@ const PersonProfile1 = () => {
   );
 };
 
-export default PersonProfile1;
+export default PersonProfile;

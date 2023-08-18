@@ -6,7 +6,6 @@ import { useTheme } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
-import axios from "axios";
 
 const Contacts = () => {
   const theme = useTheme();
@@ -73,7 +72,7 @@ const Contacts = () => {
       flex: 1,
       renderCell: (params) => {
         return (
-          <Link to={`/persons/${params.row.id}`}>
+          <Link to={`/profile/${params.row.id}`}>
             <Button
               variant="contained"
               sx={{

@@ -2,7 +2,7 @@ import { Box, useTheme, Typography } from "@mui/material";
 import { tokens } from "../theme";
 import React, { useState, useEffect } from "react";
 
-const ProgressCircle = ({ progress, text, size = "165" }) => {
+const ProgressCircle2 = ({ progress, text, size = "185" }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const angle = progress * 360;
@@ -24,7 +24,6 @@ const ProgressCircle = ({ progress, text, size = "165" }) => {
   const circleStyles = {
     background: circleBackground,
     borderRadius: "50%",
-    marginLeft: "50px",
     width: `${size}px`,
     height: `${size}px`,
     position: "relative",
@@ -36,6 +35,7 @@ const ProgressCircle = ({ progress, text, size = "165" }) => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     textAlign: "center",
+    
   };
 
   const [formattedProgress, setformattedProgress] = useState([]);
@@ -50,15 +50,15 @@ const ProgressCircle = ({ progress, text, size = "165" }) => {
   return (
     <Box sx={circleStyles}>
       <Typography
-        variant="h3"
+        variant="h1"
         fontWeight="600"
         color={colors.grey[100]}
         sx={textStyles}
       >
-        {text === "null" ? `${formattedProgress}%` : `₹${formattedProgress}`}
+        {formattedProgress}
       </Typography>
     </Box>
   );
 };
 
-export default ProgressCircle;
+export default ProgressCircle2;
