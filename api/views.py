@@ -85,6 +85,17 @@ def create_person(request):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_person(request,person_id):
+    try:
+        person = Person.objects.filter(id=person_id, user=request.user)
+        person.delete()
+        return Response({"message":"Person deleted"})
+    except Person.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["GET"])

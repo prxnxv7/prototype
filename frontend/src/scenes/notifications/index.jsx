@@ -5,7 +5,7 @@ import Header from "../../components/header";
 import { useTheme } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import AuthContext from '../../context/AuthContext'
+import AuthContext from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const Transactions = () => {
@@ -13,7 +13,7 @@ const Transactions = () => {
   const colors = tokens(theme.palette.mode);
   const [transactions, setTransactions] = useState([]);
   const [paidAmounts, setPaidAmounts] = useState({});
-  let {authTokens, logoutUser} = useContext(AuthContext)
+  let { authTokens, logoutUser } = useContext(AuthContext);
 
   useEffect(() => {
     gettransaction();
@@ -53,7 +53,7 @@ const Transactions = () => {
             "Content-Type": "application/json",
             Authorization: "Bearer " + String(authTokens.access),
           },
-        },
+        }
       );
       const updatedTransactions = transactions.map((transaction) =>
         transaction.id === response.data.id ? response.data : transaction
@@ -67,6 +67,8 @@ const Transactions = () => {
       console.log(updatedTransactions);
     } catch (error) {}
   };
+
+
 
   const columns = [
     {
@@ -82,20 +84,20 @@ const Transactions = () => {
     },
     {
       field: "total_amount_owed",
-      headerName: "Money Owed",
+      headerName: "Total Amount",
       flex: 1,
     },
     {
-      field: "time_period",
-      headerName: "Time Interval Given",
+      field: "paid",
+      headerName: "Previous Paid",
       flex: 1,
     },
     {
-      field: "start_date",
-      headerName: "Start Date",
+      field: "previous_due_date",
+      headerName: "Previous Date",
       flex: 1,
       valueGetter: (params) => {
-        const startDate = new Date(params.row.start_date);
+        const startDate = new Date(params.row.previous_due_date);
         return startDate.toLocaleDateString();
       },
     },
@@ -126,19 +128,22 @@ const Transactions = () => {
                 [params.row.id]: e.target.value,
               }))
             }
-            sx={{marginRight:"5px"}}
+            sx={{ marginRight: "5px" }}
           />
           <Link to={`/notifications/`}>
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor:colors.greenAccent[500],
-            }}
-            onClick={() => handlePaid(params.row.id, paidAmounts[params.row.id] || "")}
-          >
-            Paid
-          </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: colors.greenAccent[500],
+              }}
+              onClick={() =>
+                handlePaid(params.row.id, paidAmounts[params.row.id] || "")
+              }
+            >
+              Paid
+            </Button>
           </Link>
+
         </Box>
       ),
     },
@@ -162,10 +167,12 @@ const Transactions = () => {
             fontSize: "15px",
             borderLeft: "none",
             paddingLeft: "20px",
+            fontFamily: "sans-serif",
           },
           "& .MuiDataGrid-columnHeaders": {
-            fontSize: "18px",
+            fontSize: "17px",
             marginLeft: "10px",
+            fontFamily: "Montserrat",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[0],
@@ -178,11 +185,11 @@ const Transactions = () => {
             color: `${colors.greenAccent[200]} !important`,
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
+            color: `#ffffff !important`,
             marginBottom: "20px",
             marginTop: "20px",
             marginLeft: "10px",
-            backgroundColor: colors.greenAccent[600],
+            backgroundColor: "#a654f8",
           },
         }}
       >

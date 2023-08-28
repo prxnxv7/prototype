@@ -47,11 +47,11 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center" >
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="DASHBOARD"  subtitle="Today's Summary"/>
       </Box>
 
       {/* GRID & CHARTS */}
-      <Box backgroundColor={colors.primary[0]} borderRadius="15px" height="65vh">
+      <Box backgroundColor={colors.primary[0]} borderRadius="15px" height="70vh">
         <Box
           display="grid"
           gridTemplateColumns="repeat(9, 1fr)"
@@ -85,6 +85,7 @@ const Dashboard = () => {
               fontWeight="600"
               marginLeft="30px"
               marginTop="22px"
+              fontFamily="Montserrat"
             >
               Todays Collections
             </Typography>
@@ -111,6 +112,7 @@ const Dashboard = () => {
               marginTop="22px"
               color={colors.grey[100]} 
               variant="h3" fontWeight="600"
+              fontFamily="Montserrat"
             >
               Pending Collections
             </Typography>
@@ -148,7 +150,7 @@ const Dashboard = () => {
                 color={colors.grey[100]}
                 variant="h3"
                 fontWeight="600"
-                
+                fontFamily="Montserrat"
               >
                 Paid Today
               </Typography>
@@ -205,6 +207,7 @@ const Dashboard = () => {
                 color={colors.grey[100]}
                 variant="h3"
                 fontWeight="600"
+                fontFamily="Montserrat"
               >
                 Pending
               </Typography>
@@ -227,7 +230,7 @@ const Dashboard = () => {
                   </Typography>
                 </Box>
                 <Box
-                  backgroundColor={colors.greenAccent[500]}
+                  
                   p="5px 10px"
                   borderRadius="4px"
                 >
@@ -260,6 +263,7 @@ const Dashboard = () => {
                   variant="h4"
                   fontWeight="600"
                   color={colors.grey[100]}
+                  fontFamily="Montserrat"
                 >
                   Total Collection Today
                 </Typography>

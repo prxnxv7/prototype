@@ -73,9 +73,6 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="5px"
               >
-                <Typography variant="h3" color={colors.grey[500]}>
-                  WELCOME
-                </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>

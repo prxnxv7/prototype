@@ -49,12 +49,12 @@ const Contacts = () => {
     },
     {
       field: "money_owed",
-      headerName: "Money Owed",
+      headerName: "Total Amount",
       flex: 1,
     },
     {
       field: "time_period_given",
-      headerName: "Time Interval Given",
+      headerName: "Due Period",
       flex: 1,
     },
     {
@@ -77,7 +77,7 @@ const Contacts = () => {
               variant="contained"
               sx={{
                 backgroundColor: colors.greenAccent[600],
-                color: colors.grey[100],
+                color: "#ffffff",
               }}
             >
               More
@@ -108,11 +108,13 @@ const Contacts = () => {
           "& .MuiDataGrid-cell": {
             fontSize: "15px",
             borderLeft: "none",
-            paddingLeft: "20.5px",
+            paddingLeft: "22px",
+            fontFamily:"sans-serif"
           },
           "& .MuiDataGrid-columnHeaders": {
-            fontSize: "18px",
+            fontSize: "17px",
             marginLeft: "10px",
+            fontFamily:"Montserrat"
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[0],
@@ -125,11 +127,11 @@ const Contacts = () => {
             color: `${colors.greenAccent[200]} !important`,
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
+            color: `#ffffff !important`,
             marginBottom: "20px",
             marginTop: "20px",
             marginLeft: "10px",
-            backgroundColor: colors.greenAccent[600],
+            backgroundColor: "#a654f8",
           },
         }}
       >

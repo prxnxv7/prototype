@@ -11,14 +11,14 @@ const ProgressCircle = ({ progress, text, size = "165" }) => {
   if (text === "null") {
     circleBackground = `
       radial-gradient(${colors.primary[400]} 55%, transparent 56%),
-      conic-gradient(transparent 0deg ${angle}deg, ${colors.primary[100]} ${angle}deg 360deg),
-      ${colors.greenAccent[500]}
+      conic-gradient(transparent 0deg ${angle}deg, #00FFF5 ${angle}deg 360deg),
+      #E7D000
     `;
   } else {
     circleBackground = `
       radial-gradient(${colors.primary[400]} 55%, transparent 56%),
-      conic-gradient(transparent 0deg ${angle}deg, ${colors.redAccent[500]} ${angle}deg 360deg),
-      ${colors.greenAccent[500]}
+      conic-gradient(transparent 0deg ${angle}deg, #FF05C8 ${angle}deg 360deg),
+      #E7D000
     `;
   }
   const circleStyles = {

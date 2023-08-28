@@ -42,7 +42,7 @@ function App() {
                 <Route path="/profile/:personId" element={<PersonProfile />} />
                 <Route path="/add_contact" element={<Form />} />
                 <Route path="/contacts" element={<Contacts />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
               </Routes>
             </AuthProvider>

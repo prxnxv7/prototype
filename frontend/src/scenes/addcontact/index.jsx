@@ -140,7 +140,7 @@ const Form = () => {
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
+              <Button type="submit" variant="contained" sx={{color:colors.primary[0],backgroundColor:"#a654f8"}}>
                 Create New Contact
               </Button>
             </Box>

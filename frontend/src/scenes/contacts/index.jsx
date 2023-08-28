@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import { useTheme } from "@mui/material";
@@ -16,6 +16,7 @@ const PersonProfile = () => {
   const [transactions, setTransactions] = useState([]);
   const [payments, setPayments] = useState([]);
   let { authTokens, logoutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getPerson();
@@ -45,6 +46,27 @@ const PersonProfile = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/api/delete/${personId}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        }
+      );
+      if (response.status === 200) {
+        // Handle successful deletion, maybe navigate to a different page or show a success message
+        navigate("/contacts");
+      } else if (response.statusText === "Unauthorized") {
+        logoutUser();
+      }
+    } catch (error) {
+      // Handle error, maybe show an error message
+    }
+  };
   return (
     <Box>
       <Box
@@ -61,6 +83,16 @@ const PersonProfile = () => {
         >
           <h1 sx={{ marginLeft: "10px" }}>{person.name}</h1>
           <h2>{person.phno}</h2>
+          <Button
+            variant="h1"
+            sx={{
+              backgroundColor: colors.redAccent[500],
+              color: "#ffffff",
+            }}
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
         </Box>
 
         {/* details */}
@@ -102,63 +134,77 @@ const PersonProfile = () => {
               paddingLeft="20px"
             >
               <h2>Next Due</h2>
-              <h2 className="css">{transactions.length > 0 ? new Date(transactions[0].next_due_date).toLocaleDateString() : ''}</h2>
+              <h2 className="css">
+                {transactions.length > 0
+                  ? new Date(transactions[0].next_due_date).toLocaleDateString()
+                  : ""}
+              </h2>
             </Box>
 
             {/* ROW 2 */}
             {transactions.map((transaction) => (
-            <Box
-              gridColumn="span 3"
-              gridRow="span 2"
-              backgroundColor={colors.blueAccent[900]}
-              borderRadius="10px"
-              margin="15px 0px 15px 30px"
-            >
               <Box
-                mt="25px"
-                p="0 30px"
-                display="block "
-                justifyContent="space-between"
-                alignItems="center"
+                gridColumn="span 3"
+                gridRow="span 2"
+                backgroundColor={colors.primary[400]}
+                borderRadius="10px"
+                margin="15px 0px 15px 30px"
               >
-                <Typography
-                  variant="h3"
-                  fontWeight="600"
-                  color={colors.grey[100]}
-                  mb="15px"
+                <Box
+                  mt="25px"
+                  p="0 30px"
+                  display="block "
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  Completion
-                </Typography>
-                <ProgressCircle progress={(transaction.final_paid)/(transaction.total_amount_owed)} text="null" />
+                  <Typography
+                    variant="h3"
+                    fontWeight="600"
+                    color={colors.grey[100]}
+                    mb="15px"
+                  >
+                    Completion
+                  </Typography>
+                  <ProgressCircle
+                    progress={
+                      transaction.final_paid / transaction.total_amount_owed
+                    }
+                    text="null"
+                  />
+                </Box>
               </Box>
-            </Box>
             ))}
             {transactions.map((transaction) => (
-            <Box
-              gridColumn="span 3"
-              gridRow="span 2"
-              backgroundColor={colors.blueAccent[900]}
-              borderRadius="10px"
-              margin="15px 0px 15px 30px"
-            >
               <Box
-                mt="25px"
-                p="0 30px"
-                display="block "
-                justifyContent="space-between"
-                alignItems="center"
+                gridColumn="span 3"
+                gridRow="span 2"
+                backgroundColor={colors.primary[400]}
+                borderRadius="10px"
+                margin="15px 0px 15px 30px"
               >
-                <Typography
-                  variant="h3"
-                  fontWeight="600"
-                  color={colors.grey[100]}
-                  mb="15px"
+                <Box
+                  mt="25px"
+                  p="0 30px"
+                  display="block "
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  Collections
-                </Typography>
-                <ProgressCircle progress={(transaction.final_paid)/(transaction.total_amount_owed)} text={transaction.total_amount_owed} />
+                  <Typography
+                    variant="h3"
+                    fontWeight="600"
+                    color={colors.grey[100]}
+                    mb="15px"
+                  >
+                    Collections
+                  </Typography>
+                  <ProgressCircle
+                    progress={
+                      transaction.final_paid / transaction.total_amount_owed
+                    }
+                    text={transaction.total_amount_owed}
+                  />
+                </Box>
               </Box>
-            </Box>
             ))}
 
             <Box
@@ -193,12 +239,10 @@ const PersonProfile = () => {
                   borderBottom={`4px solid ${colors.grey[900]}`}
                   p="15px"
                 >
-                  <Box color={colors.grey[100]}>{new Date(payment.paid_date).toLocaleDateString()}</Box>
-                  <Box
-                    backgroundColor={colors.greenAccent[500]}
-                    p="5px 10px"
-                    borderRadius="4px"
-                  >
+                  <Box color={colors.grey[100]}>
+                    {new Date(payment.paid_date).toLocaleDateString()}
+                  </Box>
+                  <Box p="5px 10px" borderRadius="4px">
                     ₹{payment.paid_amount}
                   </Box>
                 </Box>
@@ -228,7 +272,7 @@ const PersonProfile = () => {
                   <Typography
                     variant="h3"
                     fontWeight="600"
-                    color={colors.grey[100]}
+                    color="#00FFF5"
                     paddingLeft="10rem"
                     paddingTop="15px"
                   >
@@ -246,7 +290,7 @@ const PersonProfile = () => {
                   <Typography
                     variant="h3"
                     fontWeight="600"
-                    color={colors.greenAccent[400]}
+                    color="#E7D000"
                     paddingTop="15px"
                   >
                     ₹{transaction.final_paid}
@@ -264,7 +308,7 @@ const PersonProfile = () => {
                   <Typography
                     variant="h3"
                     fontWeight="600"
-                    color={colors.redAccent[500]}
+                    color="#FF05C8"
                     paddingRight="10rem"
                     paddingTop="15px"
                   >

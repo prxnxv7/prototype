@@ -11,7 +11,7 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const mainBackgroundColor =
-    theme.palette.mode === "dark" ? colors.grey[900] : colors.grey[50];
+    theme.palette.mode === "dark" ? colors.primary[0] : colors.primary[0];
 
   return (
     <Box
@@ -21,8 +21,8 @@ const Topbar = () => {
       backgroundColor={mainBackgroundColor}
     >
       <Box>
-        <Typography variant="h1" color={colors.blueAccent[300]}>
-          ANNAMALAIYAAR
+        <Typography variant="h1" color="#8435D4" fontFamily="Inder">
+          Welcome Boss,
         </Typography>
       </Box>
 

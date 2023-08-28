@@ -18,6 +18,7 @@ urlpatterns = [
         name="updation_page",
     ),
     path("persons/<int:person_id>/", views.person_profile, name="person_profile"),
+    path("delete/<int:person_id>/", views.delete_person, name="delete_profile"),
     # auth
     path("register/", views.register_user, name="register_user"),
     path("token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
