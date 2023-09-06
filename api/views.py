@@ -81,6 +81,8 @@ def create_person(request):
                 paid=0,
                 final_paid=0,
                 pending_amount=person.money_owed,
+                per_due_amount=person.amount_per_due,
+                number_of_dues=person.dues
             )
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -130,6 +132,27 @@ def update_transaction(request, transaction_id):
         transaction.pending_amount = (
             transaction.total_amount_owed - transaction.final_paid
         )
+
+        transaction.previous_due_date = timezone.now().date()
+
+        if transaction.final_paid <= transaction.total_amount_owed:
+            transaction.next_due_date += timedelta(minutes=transaction.time_period)
+
+        transaction.save()
+
+        serializer = TransactionSerializer(transaction)
+        print(serializer.data)
+        return Response(serializer.data)
+    except Transaction.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def ignore_transaction(request, transaction_id):
+    try:
+        transaction = Transaction.objects.get(id=transaction_id, user=request.user)
+        print(request.data)
 
         transaction.previous_due_date = timezone.now().date()
 

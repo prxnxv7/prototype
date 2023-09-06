@@ -17,6 +17,11 @@ urlpatterns = [
         views.update_transaction,
         name="updation_page",
     ),
+    path(
+        "ignore/<int:transaction_id>/",
+        views.ignore_transaction,
+        name="ignore_page",
+    ),
     path("persons/<int:person_id>/", views.person_profile, name="person_profile"),
     path("delete/<int:person_id>/", views.delete_person, name="delete_profile"),
     # auth

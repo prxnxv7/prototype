@@ -68,6 +68,30 @@ const Transactions = () => {
     } catch (error) {}
   };
 
+  const handleIgnore = async (transactionId) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:8000/api/ignore/${transactionId}/`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+        }
+      );
+      console.log(authTokens.access);
+      const updatedTransactions = transactions.map((transaction) =>
+        transaction.id === response.data.id ? response.data : transaction
+      );
+      setTransactions(updatedTransactions);
+      window.location.reload();
+      console.log(updatedTransactions);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
 
 
   const columns = [
@@ -102,11 +126,11 @@ const Transactions = () => {
       },
     },
     {
-      field: "next_due_date",
-      headerName: "Next Due Date",
+      field: "per_due_amount",
+      headerName: "Amount per due",
       flex: 1,
       valueGetter: (params) => {
-        const nextDueDate = new Date(params.row.next_due_date);
+        const nextDueDate = new Date(params.row.per_due_amount);
         return nextDueDate.toLocaleDateString();
       },
     },
@@ -143,7 +167,17 @@ const Transactions = () => {
               Paid
             </Button>
           </Link>
-
+          <Button
+              variant="contained"
+              sx={{
+                backgroundColor: colors.greenAccent[500],
+              }}
+              onClick={() =>
+                handleIgnore(params.row.id)
+              }
+            >
+              Ignore
+            </Button>
         </Box>
       ),
     },
