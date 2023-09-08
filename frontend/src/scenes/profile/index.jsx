@@ -39,7 +39,7 @@ const Contacts = () => {
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
+      flex: 0.8,
       cellClassName: "name-column--cell",
     },
     {
@@ -55,6 +55,16 @@ const Contacts = () => {
     {
       field: "time_period_given",
       headerName: "Due Period",
+      flex: 1,
+    },
+    {
+      field: "amount_per_due",
+      headerName: "Amount per due",
+      flex: 1,
+    },
+    {
+      field: "dues",
+      headerName: "No. of dues ",
       flex: 1,
     },
     {
@@ -108,7 +118,7 @@ const Contacts = () => {
           "& .MuiDataGrid-cell": {
             fontSize: "15px",
             borderLeft: "none",
-            paddingLeft: "22px",
+            paddingLeft: "20px",
             fontFamily:"sans-serif"
           },
           "& .MuiDataGrid-columnHeaders": {

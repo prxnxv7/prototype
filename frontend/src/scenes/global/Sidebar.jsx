@@ -8,7 +8,6 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import pic from "../../annamalaiyaar.jpeg";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -133,14 +132,6 @@ const Sidebar = () => {
               title="Notifications"
               to="/notifications"
               icon={<NotificationsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Add Contact"
-              to="/add_contact"
-              icon={<PersonAddAltIcon />}
               selected={selected}
               setSelected={setSelected}
             />

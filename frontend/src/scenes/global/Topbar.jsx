@@ -1,10 +1,11 @@
 import { Box, IconButton, useTheme, Typography } from "@mui/material";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { ColorModeContext, tokens } from "../../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -38,12 +39,16 @@ const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
+        <Link to='/notifications'>
+          <IconButton sx={{mt:"5px"}}>
+            <NotificationsOutlinedIcon />
+          </IconButton>
+        </Link>
+        <Link to='/add_contact'>
+          <IconButton sx={{mt:"5px"}}>
+            <PersonAddAltIcon />
+          </IconButton>
+        </Link>
       </Box>
     </Box>
   );

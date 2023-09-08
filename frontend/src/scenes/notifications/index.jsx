@@ -98,7 +98,7 @@ const Transactions = () => {
     {
       field: "name",
       headerName: "Name",
-      flex: 1,
+      flex: 0.75,
       cellClassName: "name-column--cell",
     },
     {
@@ -109,12 +109,12 @@ const Transactions = () => {
     {
       field: "total_amount_owed",
       headerName: "Total Amount",
-      flex: 1,
+      flex: 0.8,
     },
     {
       field: "paid",
       headerName: "Previous Paid",
-      flex: 1,
+      flex: 0.8,
     },
     {
       field: "previous_due_date",
@@ -129,15 +129,11 @@ const Transactions = () => {
       field: "per_due_amount",
       headerName: "Amount per due",
       flex: 1,
-      valueGetter: (params) => {
-        const nextDueDate = new Date(params.row.per_due_amount);
-        return nextDueDate.toLocaleDateString();
-      },
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 1.5,
       renderCell: (params) => (
         <Box display="flex" alignItems="center">
           <TextField
@@ -154,7 +150,6 @@ const Transactions = () => {
             }
             sx={{ marginRight: "5px" }}
           />
-          <Link to={`/notifications/`}>
             <Button
               variant="contained"
               sx={{
@@ -166,7 +161,6 @@ const Transactions = () => {
             >
               Paid
             </Button>
-          </Link>
           <Button
               variant="contained"
               sx={{
