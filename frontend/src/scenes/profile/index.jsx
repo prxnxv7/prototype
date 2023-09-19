@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 const Contacts = () => {
   const theme = useTheme();
@@ -17,6 +18,33 @@ const Contacts = () => {
   useEffect(() => {
     getprofile();
   }, []);
+
+  const CustomToolbar = () => {
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <GridToolbar />
+        <Link to="/add_contact">
+          <Button
+            sx={{
+              backgroundColor: "#a654f8",
+              color: "#ffffff",
+              marginLeft: "5px",
+              marginTop: "5px",
+              paddingTop: "4px",
+              paddingBottom: "4px",
+              paddingLeft: "5px",
+              fontSize: "12px",
+            }}
+          >
+            <PersonAddAltIcon
+              sx={{ paddingRight: "3px", marginRight: "5px" }}
+            />
+            Add Contact
+          </Button>
+        </Link>
+      </div>
+    );
+  };
 
   let getprofile = async () => {
     let response = await fetch("http://127.0.0.1:8000/api/profile/", {
@@ -45,7 +73,7 @@ const Contacts = () => {
     {
       field: "phno",
       headerName: "Phone Number",
-      flex: 1,
+      flex: 1.1,
     },
     {
       field: "money_owed",
@@ -60,7 +88,7 @@ const Contacts = () => {
     {
       field: "amount_per_due",
       headerName: "Amount per due",
-      flex: 1,
+      flex: 1.2,
     },
     {
       field: "dues",
@@ -119,12 +147,12 @@ const Contacts = () => {
             fontSize: "15px",
             borderLeft: "none",
             paddingLeft: "20px",
-            fontFamily:"sans-serif"
+            fontFamily: "sans-serif",
           },
           "& .MuiDataGrid-columnHeaders": {
             fontSize: "17px",
             marginLeft: "10px",
-            fontFamily:"Montserrat"
+            fontFamily: "Montserrat",
           },
           "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[0],
@@ -148,7 +176,7 @@ const Contacts = () => {
         <DataGrid
           rows={contactData}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
+          components={{ Toolbar: CustomToolbar }}
         />
       </Box>
     </Box>

@@ -67,8 +67,8 @@ def create_person(request):
             serializer.save(user=request.user)
             person = serializer.instance
 
-            initial_next_due_date = timezone.now() + timedelta(
-                minutes=person.time_period_given
+            initial_next_due_date = date.today() + timedelta(
+                days=person.time_period_given
             )
 
             Transaction.objects.create(
@@ -103,15 +103,28 @@ def delete_person(request,person_id):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def notification_page(request):
-    today = timezone.now().date()
+    overdues = update_overdue_transactions(request.user)
+    today = date.today()
     transactions = Transaction.objects.filter(
         Q(next_due_date=today)
         & ~Q(final_paid=F("total_amount_owed"))
         & Q(final_paid__lt=F("total_amount_owed"))
         & Q(user=request.user)
     )
-    serializer = TransactionSerializer(transactions, many=True)
+    combined_transactions = overdues.union(transactions)
+    serializer = TransactionSerializer(combined_transactions, many=True)
     return Response(serializer.data)
+
+def update_overdue_transactions(user):
+    today = date.today()
+    overdue_transactions = Transaction.objects.filter(
+        Q(next_due_date__lt=today)
+        & ~Q(final_paid=F("total_amount_owed"))
+        & Q(final_paid__lt=F("total_amount_owed"))
+        & Q(user=user)
+    )
+
+    return overdue_transactions
 
 
 @api_view(["PATCH"])
@@ -124,7 +137,7 @@ def update_transaction(request, transaction_id):
         payment = Payment.objects.create(
             transaction=transaction,
             paid_amount=paid_amount,
-            paid_date=timezone.now().date(),
+            paid_date=date.today(),
             user=request.user,
         )
         transaction.final_paid += paid_amount
@@ -133,10 +146,10 @@ def update_transaction(request, transaction_id):
             transaction.total_amount_owed - transaction.final_paid
         )
 
-        transaction.previous_due_date = timezone.now().date()
+        transaction.previous_due_date = date.today()
 
         if transaction.final_paid <= transaction.total_amount_owed:
-            transaction.next_due_date += timedelta(minutes=transaction.time_period)
+            transaction.next_due_date += timedelta(days=transaction.time_period)
 
         transaction.save()
 
@@ -152,17 +165,13 @@ def update_transaction(request, transaction_id):
 def ignore_transaction(request, transaction_id):
     try:
         transaction = Transaction.objects.get(id=transaction_id, user=request.user)
-        print(request.data)
-
-        transaction.previous_due_date = timezone.now().date()
 
         if transaction.final_paid <= transaction.total_amount_owed:
-            transaction.next_due_date += timedelta(minutes=transaction.time_period)
+            transaction.next_due_date += timedelta(days=transaction.time_period)
 
         transaction.save()
 
         serializer = TransactionSerializer(transaction)
-        print(serializer.data)
         return Response(serializer.data)
     except Transaction.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -204,14 +213,21 @@ def get_persons(request):
 @permission_classes([IsAuthenticated])
 def get_dashboard(request):
     today = date.today()
+    overdue_transactions = Transaction.objects.filter(
+        Q(next_due_date__lt=today)
+        & ~Q(final_paid=F("total_amount_owed"))
+        & Q(final_paid__lt=F("total_amount_owed"))
+        & Q(user=request.user)
+    )
+    overdue_count = overdue_transactions.count()
 
-    payments_made_today = Payment.objects.filter(
-        paid_date=today, user=request.user
-    ).count()
-
-    transactions_due_today = Transaction.objects.filter(
-        next_due_date=today, user=request.user
-    ).count()
+    transactions = Transaction.objects.filter(
+        Q(next_due_date=today)
+        & ~Q(final_paid=F("total_amount_owed"))
+        & Q(final_paid__lt=F("total_amount_owed"))
+        & Q(user=request.user)
+    )
+    transaction_count = transactions.count() 
 
     total_payment_amount_today = (
         Payment.objects.filter(paid_date=today, user=request.user).aggregate(
@@ -224,14 +240,14 @@ def get_dashboard(request):
     payments_today_data = PaymentSerializer(payments_today, many=True).data
 
     transaction = Transaction.objects.filter(pending_amount__gt=0, user=request.user)
-    transaction_data = TransactionSerializer(transaction, many=True).data
+    transaction_data = TransactionSerializer(transactions, many=True).data
 
     response_data = {
-        "payments_made_today": payments_made_today,
-        "transactions_due_today": transactions_due_today,
+        "overdue_count": overdue_count,
+        "transaction_count": transaction_count,
         "total_payment_amount_today": total_payment_amount_today,
         "payments_today": payments_today_data,
         "transaction_data": transaction_data,
     }
-    print(response_data["payments_made_today"])
+    print(response_data["overdue_count"])
     return Response(response_data)

@@ -1,14 +1,14 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
-import ProgressCircle2 from "../../components/progresscircles2";
+import ProgressCircle3 from "../../components/progresscircles3";
 import React, { useEffect, useState, useContext } from "react";
 import AuthContext from "../../context/AuthContext";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [paymentnum, setPaymentnum] = useState([]);
+  const [overdues, setOverdues] = useState([]);
   const [transactionnum, setTransactionnum] = useState([]);
   const [total, setTotal] = useState([]);
   const [today, setToday] = useState([]);
@@ -31,13 +31,11 @@ const Dashboard = () => {
     let data = await response.json();
 
     if (response.status === 200) {
-      setPaymentnum(data.payments_made_today);
-      setTransactionnum(data.transactions_due_today);
+      setOverdues(data.overdue_count);
+      setTransactionnum(data.transaction_count);
       setTotal(data.total_payment_amount_today);
       setToday(data.payments_today);
       setPending(data.transaction_data);
-
-      console.log(paymentnum);
     } else if (response.statusText === "Unauthorized") {
       logoutUser();
     }
@@ -69,7 +67,7 @@ const Dashboard = () => {
             borderRadius="10px"
             margin="15px 0px 0px 15px"
           >
-            <ProgressCircle2 progress={(paymentnum)/(transactionnum)} text={transactionnum} />
+            <ProgressCircle3 progress={(overdues)/(transactionnum)} text={transactionnum} />
             
           </Box>
           <Box
@@ -87,17 +85,17 @@ const Dashboard = () => {
               marginTop="22px"
               fontFamily="Montserrat"
             >
-              Todays Collections
+              Count
             </Typography>
             <Typography
-              color={colors.greenAccent[400]}
+              color="#FF05C8"
               variant="h2"
               fontWeight="600"
               sx={{
                 marginLeft:"30px",
                 marginTop:"15px" }}
             >
-              {paymentnum}
+              {transactionnum}
             </Typography>
           </Box>
           <Box
@@ -114,10 +112,10 @@ const Dashboard = () => {
               variant="h3" fontWeight="600"
               fontFamily="Montserrat"
             >
-              Pending Collections
+              Over dues
             </Typography>
             <Typography
-              color={colors.redAccent[500]}
+              color="#E7D000"
               variant="h2"
               fontWeight="600"
               sx={{
@@ -125,7 +123,7 @@ const Dashboard = () => {
                 marginTop:"15px" 
               }}
             >
-              {transactionnum - paymentnum}
+              {overdues}
             </Typography>
           </Box>
 
@@ -209,7 +207,7 @@ const Dashboard = () => {
                 fontWeight="600"
                 fontFamily="Montserrat"
               >
-                Pending
+                Today Pending
               </Typography>
             </Box>
             {pending.map((left) => (

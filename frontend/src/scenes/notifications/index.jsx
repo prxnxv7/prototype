@@ -164,7 +164,8 @@ const Transactions = () => {
           <Button
               variant="contained"
               sx={{
-                backgroundColor: colors.greenAccent[500],
+                backgroundColor: colors.redAccent[500],
+                marginLeft:"5px",
               }}
               onClick={() =>
                 handleIgnore(params.row.id)
@@ -194,7 +195,7 @@ const Transactions = () => {
           "& .MuiDataGrid-cell": {
             fontSize: "15px",
             borderLeft: "none",
-            paddingLeft: "20px",
+            paddingLeft: "22px",
             fontFamily: "sans-serif",
           },
           "& .MuiDataGrid-columnHeaders": {

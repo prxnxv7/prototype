@@ -210,7 +210,7 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Money Owed"
+                label="Total Amount"
                 onBlur={handleBlur}
                 onChange={(e) => {
                   handleChange(e);
@@ -226,7 +226,7 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Time interval"
+                label="Due Period"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.time_period_given}

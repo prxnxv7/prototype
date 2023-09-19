@@ -105,7 +105,7 @@ const PersonProfile = () => {
           >
             {/* Row 1 */}
             <Box
-              gridColumn="span 3"
+              gridColumn="span 2"
               backgroundColor={colors.primary[400]}
               borderRadius="10px"
               margin="15px 0px 0px 30px"
@@ -117,20 +117,20 @@ const PersonProfile = () => {
               </h2>
             </Box>
             <Box
-              gridColumn="span 3"
+              gridColumn="span 2"
               backgroundColor={colors.primary[400]}
               borderRadius="10px"
               margin="15px 0px 0px 30px"
               paddingLeft="20px"
             >
-              <h2>Amount Per Due</h2>
-              <h2 className="css">{person.time_period_given} Days</h2>
+              <h2>Number of Dues</h2>
+              <h2 className="css">{parseInt(person.dues)}</h2>
             </Box>
             <Box
-              gridColumn="span 3"
+              gridColumn="span 2"
               backgroundColor={colors.primary[400]}
               borderRadius="10px"
-              margin="15px 15px 0px 30px"
+              margin="15px 0px 0px 30px"
               paddingLeft="20px"
             >
               <h2>Next Due</h2>
@@ -139,6 +139,16 @@ const PersonProfile = () => {
                   ? new Date(transactions[0].next_due_date).toLocaleDateString()
                   : ""}
               </h2>
+            </Box>
+            <Box
+              gridColumn="span 3"
+              backgroundColor={colors.primary[400]}
+              borderRadius="10px"
+              margin="15px 15px 0px 30px"
+              paddingLeft="20px"
+            >
+              <h2>Amount Per Due</h2>
+              <h2 className="css">₹ {person.amount_per_due}</h2>
             </Box>
 
             {/* ROW 2 */}
@@ -225,7 +235,7 @@ const PersonProfile = () => {
               >
                 <Typography
                   color={colors.grey[100]}
-                  variant="h5"
+                  variant="h4"
                   fontWeight="600"
                 >
                   Previous Payments
@@ -238,11 +248,12 @@ const PersonProfile = () => {
                   alignItems="center"
                   borderBottom={`4px solid ${colors.grey[900]}`}
                   p="15px"
+                  
                 >
-                  <Box color={colors.grey[100]}>
+                  <Box color={colors.grey[100]} fontSize="medium">
                     {new Date(payment.paid_date).toLocaleDateString()}
                   </Box>
-                  <Box p="5px 10px" borderRadius="4px">
+                  <Box p="5px 10px" borderRadius="4px" fontSize="medium">
                     ₹{payment.paid_amount}
                   </Box>
                 </Box>
