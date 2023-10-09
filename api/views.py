@@ -67,10 +67,8 @@ def create_person(request):
             serializer.save(user=request.user)
             person = serializer.instance
 
-            initial_next_due_date = date.today() + timedelta(
-                days=person.time_period_given
-            )
-
+            initial_next_due_date = date.today() + timedelta(days=person.time_period_given)
+            
             Transaction.objects.create(
                 user=request.user,
                 person=person,
