@@ -11,8 +11,8 @@ class Person(models.Model):
     money_owed = models.DecimalField(max_digits=10, decimal_places=2)
     time_period_given = models.PositiveIntegerField(default=30)
     start_date = models.DateTimeField(default=timezone.now)
-    amount_per_due = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    dues = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    amount_per_due = models.DecimalField(max_digits=10, decimal_places=2)
+    dues = models.DecimalField(max_digits=10, decimal_places=2)
     
     
     def __str__(self):

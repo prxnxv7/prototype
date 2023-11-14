@@ -68,7 +68,12 @@ def create_person(request):
             person = serializer.instance
 
             initial_next_due_date = date.today() + timedelta(days=person.time_period_given)
-            
+                        # Calculate dues
+            dues = person.money_owed / person.amount_per_due
+
+            # Round up to the nearest integer (assuming dues should be whole numbers)
+            number_of_dues = int(dues) + (dues % 1 > 0)
+
             Transaction.objects.create(
                 user=request.user,
                 person=person,
@@ -80,7 +85,7 @@ def create_person(request):
                 final_paid=0,
                 pending_amount=person.money_owed,
                 per_due_amount=person.amount_per_due,
-                number_of_dues=person.dues
+                number_of_dues=number_of_dues
             )
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
