@@ -242,15 +242,24 @@ def get_dashboard(request):
     payments_today = Payment.objects.filter(paid_date=today, user=request.user)
     payments_today_data = PaymentSerializer(payments_today, many=True).data
 
-    transaction = Transaction.objects.filter(pending_amount__gt=0, user=request.user)
-    transaction_data = TransactionSerializer(transactions, many=True).data
+    # transaction = Transaction.objects.filter(pending_amount__gt=0, user=request.user)
+    # transaction_data = TransactionSerializer(transactions, many=True).data
+
+
+    # Pending transactions for today, including overdue
+    pending_transactions_today = Transaction.objects.filter(
+        Q(next_due_date=today, pending_amount__gt=0) |  # Pending transactions due today
+        Q(next_due_date__lt=today, pending_amount__gt=0)  # Overdue transactions with pending amount
+        & Q(user=request.user)
+    )
+    pending_data = TransactionSerializer(pending_transactions_today, many=True).data
 
     response_data = {
         "overdue_count": overdue_count,
         "transaction_count": transaction_count,
         "total_payment_amount_today": total_payment_amount_today,
         "payments_today": payments_today_data,
-        "transaction_data": transaction_data,
+        "pending_data": pending_data,
     }
     print(response_data["overdue_count"])
     return Response(response_data)
