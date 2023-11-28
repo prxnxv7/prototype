@@ -230,7 +230,7 @@ def get_dashboard(request):
         & Q(final_paid__lt=F("total_amount_owed"))
         & Q(user=request.user)
     )
-    transaction_count = transactions.count() 
+    transaction_count = transactions.count() + overdue_count
 
     total_payment_amount_today = (
         Payment.objects.filter(paid_date=today, user=request.user).aggregate(
